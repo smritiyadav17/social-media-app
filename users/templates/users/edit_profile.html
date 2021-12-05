@@ -1,0 +1,42 @@
+{% extends "users/layout.html" %}
+{% block content %}
+{% load crispy_forms_tags %}
+{% load static %}
+<div class="container">
+	<br><br>
+	<div class="row">
+		<!-- <div class="col-md-2"></div> -->
+		
+		<div class="col-md-10">
+			<p class="h4 text-success">Edit Profile!</p>
+			<!-- edit form -->
+			<form method="POST" action="" enctype="multipart/form-data">
+				{% csrf_token %}
+
+					{% if profile_form.instance.profile_pic %}
+					<img src="{{ profile_form.instance.profile_pic.url }}" class="card-image">
+					{% endif %}
+  					 <br/>
+					<div class="row">
+						<div class="col-md-5">{{ profile_form |crispy }}</div>
+						<div class="col-md-5">{{ form |crispy }}</div>
+					</div>
+				<button class="btn btn-success">Save Changes</button>
+			</form>
+			<!-- /edit form -->
+			<br><br>
+		</div>
+
+
+		<div class="col-md-2">
+			<p class="h4 text-primary">Your Friends({{get_connection.get_friends_no}})</p>
+			{% for i in get_connection.get_friends %}
+				<li>{{ i }}</li>
+			{% endfor %}
+		</div>
+
+
+	</div>
+	<!-- /row -->
+</div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "users/layout.html" %}
+{% block content %}
+
+<div class="container">
+	<br><br>
+	<div class="row">
+		<p class="display-4">Post Detail</p>
+
+		<!-- timeline  -->
+		<div class="col-md-8">
+			<div class="container ">
+				<form method="POST" action="">
+					{% csrf_token %}
+					{{ form.as_p }}
+					<button class="btn btn-success" type="submit">Update</button>
+					<button class="btn btn-secondary" >Cancel</button>
+				</form>
+			</div>			 
+		</div>
+		<!-- /timeline -->
+
+		<!-- sidebar -->
+		<div class="col-md-4">
+			
+		</div>
+		<!-- /sidebar -->
+
+	</div>
+</div>
+{% endblock %}

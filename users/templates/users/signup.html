@@ -1,0 +1,21 @@
+{% extends "users/layout.html" %}
+{% block content %}
+{% load crispy_forms_tags %}
+<div class="container">
+	<div class="row">
+		<div class="col-md-4"></div>
+
+		<div class="col-md-4">
+			<p class="h4 text-success">Register for Free Account!</p>
+			<form method="POST" action="">
+				{% csrf_token %}
+				{{ form |crispy }}
+				<button class="btn btn-success">Sign Up!</button>
+			</form>
+		</div>
+		<div class="col-md-4"></div>
+	</div>
+
+</div>
+
+{% endblock %}

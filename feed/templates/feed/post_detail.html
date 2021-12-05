@@ -1,0 +1,128 @@
+{% extends "users/layout.html" %}
+{% block content %}
+
+<div class="container">
+	<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+	<!-- allow only the author of the post to update/delete it! -->
+	{% if post_detail.author == request.user %}
+		<span>
+	   	<a href="{% url 'feed:post-update' post_detail.id %}">
+
+	   		<button class="btn btn-sm btn-success text-light" type="submit">Update
+	   		</button>
+	   	</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	   	</span>
+	   	<span>
+		<a href="{% url 'feed:post-delete' post_detail.id %}">
+			<button class="btn btn-secondary text-light" type="submit">Delete
+			</button>
+		</a>
+		</span>
+	{% else %}
+		&nbsp;
+	{% endif %}
+	<!-- /update-delete button -->
+
+
+	
+	<!-- timeline  -->
+	<div class="col-md-8">
+		<div class="container">
+
+			<!-- rendering post data to template -->
+			<div class="card">
+				<div class="card-body">
+
+				<p class="card-title h4 text-primary">
+					{{ post_detail.author.username }}
+				<small class="text-muted ">shares....</small>
+				</p>
+				<br><hr>
+				<p class="h4 text-secondary text-center"> {{ post_detail.content }} </p><hr>
+				<p class="h6">posted at: <small class="text-muted ">{{ post_detail.created }} </small></p>
+				<br><hr><br>
+			
+
+				<!-- like form -->
+				<form method="POST" action="{% url 'feed:like_post' post_detail.id %}">
+					{% csrf_token %}
+					{% if liked %}
+					<button class="btn btn-success"type="submit" name="post_id" value="{{ post_detail.id}}">
+						You Liked!
+					</button>
+					
+					
+					{% else %}
+					<button class="btn btn-primary"type="submit" name="post_id" value="{{ post_detail.id}}">
+						Like
+					</button>
+					{% endif %}
+				</form>
+				<!-- /like form -->
+
+
+				<!-- show the post likes count -->
+				<span>{{ post_detail.likes.count }} people liked this post!</span>
+				<br><hr><br>
+				<!-- / -->
+
+
+				<!-- comments  -->
+				<form method="POST" action="{% url 'feed:comment' post_detail.id %}">
+					{% csrf_token %}
+
+					<div class="form-group">
+						<label for="exampleInputEmail">Post comment </label>
+						<input type="text"class="form-control" name="comment"  placeholder="write a comment"> <!--name="comments" -->
+					</div>
+
+					<input type="hidden" name="post_id" value="{{ post_detail.id }}">  <!--name="post_id" -->
+					<input type="hidden" name="parent_post" value="{{ post_detail.id }}">			<!--name="parent" -->
+					<button type="submit" class="btn btn-sm btn-primary">Submit</button>
+				</form>
+				<!-- /comments -->
+
+				<!-- show comments on template -->
+				<h2>Comments:</h2>
+				{% if not post_detail.comments.all %}
+				<p class="text-muted">No comments..be the first one to write a comment!</p>
+				{% else %}
+
+					{% for comment in post_detail.comments.all %}
+						{% if comment.parent %}
+							<div class="container text-right">
+							<strong><a href="#">        {{ comment.user.username }}</a></strong><br>
+							<p class="text-right">       {{ comment.comments }}</p>
+							<p class="text-right">       {{ comment.comments.parent }}</p>
+							<p class="small text-muted">{{ comment.dt_posted}}</p><hr>	
+							</div>
+						{% else %}
+							<div class="row">
+								<div class="col-md-8">
+									<div class="container">
+										<strong><a href="#">        {{ comment.user.username }}</a></strong><br>
+										<p class="text-left">       {{ comment.comments }}</p>
+										<p class="small text-muted">{{ comment.dt_posted}}</p><hr>					
+										<hr><br><br>
+									</div>
+								</div>	
+								<!-- end of col-md-8 -->
+								<div class="col-md-4"></div>
+							</div>
+						{% endif %}
+					{% endfor %}
+				{% endif %}
+				<!-- / show comments on template  -->
+
+
+
+				</div>
+				<!-- /card-body -->
+			</div>
+			<!-- /card --><br><br><br><br>
+		</div>			 
+	</div>
+	<!-- /timeline -->
+</div>
+{% endblock %}
